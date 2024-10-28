@@ -1,15 +1,22 @@
+"use server";
 import { getSession } from "@auth0/nextjs-auth0";
 import axios from "axios";
 
 const getTickets = async () => {
   const session = await getSession();
+  if (!session) return;
+  const accessToken = session.accessToken;
+
   try {
-    const res = await axios.get("http://localhost:4000/tickets", {
-      headers: {
-        Authorization: `Bearer ${session?.accessToken}`,
-        Accept: "application/json",
-      },
-    });
+    const res = await axios.get(
+      "https://qr-code-backend-426y.onrender.com/tickets",
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          Accept: "application/json",
+        },
+      }
+    );
 
     return res.data;
   } catch (error) {

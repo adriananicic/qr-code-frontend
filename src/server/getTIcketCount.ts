@@ -2,7 +2,9 @@
 
 const getTicketCount = async () => {
   try {
-    const res = await fetch("http://localhost:4000/tickets/count");
+    const res = await fetch(
+      "https://qr-code-backend-426y.onrender.com/tickets/count"
+    );
 
     const count = await res.json();
 

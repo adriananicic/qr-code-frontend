@@ -1,10 +1,11 @@
 "use client";
-import { withPageAuthRequired } from "@auth0/nextjs-auth0/client";
+import { useUser, withPageAuthRequired } from "@auth0/nextjs-auth0/client";
 import getTicketByID from "@/server/getTicketById";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import getTickets from "@/server/getTIckets";
 
-interface Ticket {
+export interface Ticket {
   vatin: string;
   firstName: string;
   lastName: string;
@@ -21,11 +22,14 @@ export default withPageAuthRequired(function TicketPage({
   const { id } = params;
   const [ticket, setTicket] = useState<Ticket | null>(null);
 
+  const { user } = useUser();
+
   useEffect(() => {
     const getTicket = async () => {
       const ticket = await getTicketByID(id);
       setTicket(ticket);
     };
+
     getTicket();
   }, [id]);
 
@@ -36,9 +40,10 @@ export default withPageAuthRequired(function TicketPage({
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4">
       <Link href="/api/auth/logout">Log out</Link>
+      <p>Logged in user email: {user?.email}</p>
+      <p>Logged in user nickname: {user?.nickname}</p>
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
         <h2 className="text-2xl font-bold mb-4">Ticket Details</h2>
-
         <p className="mb-2">
           <strong>OIB (VATIN):</strong> {ticket.vatin}
         </p>

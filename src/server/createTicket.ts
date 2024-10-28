@@ -13,8 +13,10 @@ export const createTicket = async ({ firstName, lastName, vatin }: Props) => {
   try {
     const token = await fetchToken();
 
+    console.log(token);
+
     const response = await axios.post(
-      "http://localhost:4000/tickets/create",
+      "https://qr-code-backend-426y.onrender.com/tickets/create",
       {
         firstName,
         lastName,
@@ -31,6 +33,6 @@ export const createTicket = async ({ firstName, lastName, vatin }: Props) => {
     return response.data;
   } catch (error) {
     console.error("Error creating ticket:", error);
-    throw new Error((error as Error).message || "An error occurred");
+    return { success: false, message: (error as Error).message };
   }
 };

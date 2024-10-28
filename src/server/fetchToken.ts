@@ -6,7 +6,7 @@ dotenv.config();
 const fetchToken = async (): Promise<string> => {
   try {
     const response = await axios.post(
-      `${process.env.AUTH0_DOMAIN}/oauth/token`,
+      `https://${process.env.AUTH0_DOMAIN}/oauth/token`,
       {
         client_id: process.env.AUTH0_CLIENT_ID_M2M,
         client_secret: process.env.AUTH0_CLIENT_SECRET_M2M,

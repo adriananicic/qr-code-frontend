@@ -1,8 +1,21 @@
+"use server";
+import { getSession } from "@auth0/nextjs-auth0";
+
 const getTicketByID = async (id: string) => {
+  const session = await getSession();
+  if (!session) return;
+  const accessToken = session.accessToken;
+
   try {
-    const res = await fetch(`http://localhost:4000/tickets/${id}`, {
-      cache: "no-store",
-    });
+    const res = await fetch(
+      `https://qr-code-backend-426y.onrender.com/tickets/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          Accept: "application/json",
+        },
+      }
+    );
 
     if (!res.ok) {
       return null;

@@ -1,4 +1,5 @@
 import { createTicket } from "@/server/createTicket";
+import classNames from "classnames";
 import React, { useState } from "react";
 
 const TicketForm = () => {
@@ -10,6 +11,7 @@ const TicketForm = () => {
   const [qrCode, setQrCode] = useState("");
   const [ticketId, setTicketId] = useState("");
   const [message, setMessage] = useState("");
+  const [messageColor, setMessageColor] = useState<"red" | "green">("green");
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;
@@ -22,15 +24,16 @@ const TicketForm = () => {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
-    try {
-      const { qrCode, ticketId } = await createTicket(formData);
+    const response = await createTicket(formData);
 
-      setQrCode(qrCode);
-      setTicketId(ticketId);
-      setMessage("");
-    } catch (error) {
-      setMessage("Failed to create ticket");
-      console.error(error);
+    if (response.success) {
+      setQrCode(response.qrCode);
+      setTicketId(response.ticketId);
+      setMessage("Successfully created a ticket");
+      setMessageColor("green");
+    } else {
+      setMessage(response.message);
+      setMessageColor("red");
     }
   };
 
@@ -103,7 +106,16 @@ const TicketForm = () => {
           </button>
         </form>
 
-        {message && <p className="mt-4 text-center text-red-500">{message}</p>}
+        {message && (
+          <p
+            className={classNames(
+              "mt-4 text-center ",
+              messageColor == "red" ? "text-red-500" : "text-green-500"
+            )}
+          >
+            {message}
+          </p>
+        )}
 
         {qrCode && (
           <div className="mt-8 text-center">
